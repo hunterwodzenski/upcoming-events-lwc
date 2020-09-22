@@ -1,0 +1,67 @@
+/* Break Lightning Card Titles */
+.slds-truncate {
+    white-space: normal;
+    word-wrap: break-word;
+}
+
+/* Event Title */
+.event-title {
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: #3a3a3a;
+}
+
+/* Start Event Date Tile */
+.c-date-container {
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    flex-flow: column nowrap;
+    padding-top: 12px;
+}
+    .date-container > div {
+        display: flex;
+        size: 1;
+        justify-content: center;
+        align-content: center;
+        text-transform: uppercase;
+    }
+        .date-container-date {
+            font-size: 1.05rem;
+            font-weight: 400;
+            color: #3a3a3a;
+        }
+        .date-container-time {
+            font-size: 1.2rem;
+            font-weight: 500;
+            color: #3a3a3a;
+        }
+/*End Event Date Tile*/
+
+/*Start Event Content Card*/
+.event-tile-title {
+    font-size: 1.45rem;
+    font-weight: 300;
+    color: #9ac156;
+}
+.event-tile-duration {
+    font-size: .9rem;
+    font-weight: 300;
+    color: #3a3a3a;
+}
+.event-tile-type {
+    font-size: 1.2rem;
+    font-weight: 400;
+    color: #2480bf;
+}
+.event-tile-date {
+    font-size: 1rem;
+    font-weight: 400;
+    color: #3a3a3a;
+}
+.event-tile-body {
+    font-size: 1rem;
+    font-weight: 400;
+    color: #797979;
+}
+/*End Event Content Card*/

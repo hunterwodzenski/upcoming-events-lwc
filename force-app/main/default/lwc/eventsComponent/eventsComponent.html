@@ -1,0 +1,190 @@
+<template>
+  <lightning-card icon-name="utility:monthlyview"> 
+
+    <!-- Component Title -->
+    <div class="event-title" slot="title">Upcoming Events</div>
+
+    <!-- Notifications Button -->
+    <lightning-button
+      label="" 
+      variant="base"
+      name="Button" 
+      title="Receive Notifications"
+      onclick={openSubscribeModal}
+      icon-name="utility:notification" 
+      slot="actions">
+    </lightning-button>
+
+    <!-- Start Events List -->
+    <div class="event-list slds-card__body_inner slds-scrollable_y">
+      <template if:true={events}>
+        <lightning-layout class="slds-m-top_medium" multiple-rows="true" pull-to-boundary="large">
+          <template for:each={events.data} for:item="event">
+            
+            <!-- Start Event Date Tile -->
+            <lightning-layout-item key={event.Id} class="slds-size_1-of-7 medium-size_2-of-7 slds-m-top_small">
+            <div class="date-container">
+              
+              <!--Event Day-->
+              <div>
+                <lightning-formatted-date-time class="date-container-date" 
+                value={event.Event_Start__c} 
+                month="short" 
+                day="2-digit" >
+              </lightning-formatted-date-time></div>
+              <!--Event Time-->
+              <div>
+                <lightning-formatted-date-time class="date-container-time" 
+                value={event.Event_Start__c} 
+                hour="numeric" 
+                minute="2-digit">
+              </lightning-formatted-date-time></div>
+              <!--Calendar Dropdown-->
+              <div>
+                <lightning-button-menu
+                class=""
+                variant="container"
+                icon-name="utility:event"
+                icon-size="small"
+                label=""
+                title="Add to Calendar"
+                alternative-text="Calendar menu">
+                <!--Google Calendar-->
+                <lightning-menu-item
+                  label="Google Calendar"
+                  value={event.Id}
+                  prefix-icon-name="utility:add"
+                  onclick={addToCalendar}>
+                </lightning-menu-item>
+              </lightning-button-menu>
+              </div>
+            </div>
+            </lightning-layout-item>
+            <!-- End Event Date Tile -->
+
+            <!-- Start Event Content Card -->
+            <lightning-layout-item key={event.Id} class="slds-p-bottom-small slds-border_bottom slds-size_6-of-7 medium-size_5-of-7">
+              <lightning-card class="event-tile">
+                  <div class="slds-truncate slds-p-right_x-small" slot="title">
+                    <!--Event Name-->
+                    <div class="event-tile-title">{event.Name}</div>
+                    <div class="event-tile-type">{event.Event_Type__c}</div>
+                    <!--Event Date-->
+                    <lightning-formatted-date-time class="event-tile-date" value={event.Event_Start__c} 
+                      year="numeric"
+                      month="numeric" 
+                      day="numeric" 
+                      hour="numeric" 
+                      minute="2-digit" 
+                      weekday="long"
+                      time-zone="EST">
+                    </lightning-formatted-date-time>
+                  </div>
+                  <!--Rsvp Button-->
+                  <lightning-button
+                    label="RSVP" 
+                    variant="neutral"
+                    onclick={openRsvpModal}
+                    name="Button" 
+                    title="RSVP" 
+                    slot="actions">
+                  </lightning-button>
+                  <!--Event Body-->
+                  <div class="event-tile-body slds-card__body_inner event-tile-body">
+                    <p>{event.Event_Description__c}</p>
+                    <!--<p class="event-tile-body">{event.Event_Location__c}</p>-->
+                  </div>
+              </lightning-card>
+            </lightning-layout-item>
+            <!-- End Event Content Card -->
+          </template>
+        </lightning-layout>
+      </template>
+      <!-- End Events List -->
+
+      <!-- Start RSVP Modal -->
+      <template if:true={isRsvpModalOpen}>
+        <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-describedby="modal-content-id-1" aria-modal="true" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+
+                <!--RSVP Modal Header-->
+                <header class="slds-modal__header">
+                    <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick={closeRsvpModal}>
+                        <lightning-icon icon-name="utility:close"
+                        alternative-text="close"
+                        variant="inverse"
+                        size="small" ></lightning-icon>
+                        <span class="slds-assistive-text">Close</span>
+                    </button>
+                    <div class="slds-text-heading_medium slds-hyphenate">Register for Event</div>
+                </header>
+
+                <!--RSVP Modal Body-->
+                <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                  <div></div>
+                  <!--First Name-->
+                  <lightning-input label="Firstname" placeholder="First" required></lightning-input>
+                  <!--Last Name-->
+                  <lightning-input label="Lastname" placeholder="Last" required></lightning-input>
+                  <!--Company-->
+                  <lightning-input label="Company" placeholder="Company"></lightning-input>
+                  <!--Email-->
+                  <lightning-input type="email" label="Email address" placeholder="email@example.com" required></lightning-input>
+                </div>
+                
+                  <!--RSVP Modal Footer-->
+                <footer class="slds-modal__footer">
+                    <button class="slds-button slds-button_neutral" onclick={closeRsvpModal} title="Cancel">Cancel</button>
+                    <button class="slds-button slds-button_brand" onclick={submitRsvpDetails} title="Register">Submit</button>
+                </footer>
+
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </template>
+    <!-- End RSVP Modal -->
+
+    <!-- Start Subscribe Modal -->
+    <template if:true={isSubscribeModalOpen}>
+      <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-02" aria-describedby="modal-content-id-2" aria-modal="true" class="slds-modal slds-fade-in-open">
+        <div class="slds-modal__container">
+
+          <!--Subscribe Modal Header-->
+          <header class="slds-modal__header">
+            <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick={closeSubscribeModal}>
+              <lightning-icon icon-name="utility:close"
+              alternative-text="close"
+              variant="inverse"
+              size="small" ></lightning-icon>
+                <span class="slds-assistive-text">Close</span>
+            </button>
+            <div class="slds-text-heading_medium slds-hyphenate">Receive Event Updates!</div>
+          </header>
+
+          <!--Subscribe Modal Body-->
+          <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-2">
+            <div></div>
+             <!--Email-->
+            <lightning-input type="email" label="Email address" placeholder="email@example.com" required></lightning-input>
+          </div>
+                
+          <!--Subscribe Modal Footer-->
+          <footer class="slds-modal__footer">
+            <button class="slds-button slds-button_neutral" onclick={closeSubscribeModal} title="Cancel">Cancel</button>
+            <button class="slds-button slds-button_brand" onclick={submitSubscribeDetails} title="Register">Submit</button>
+          </footer>
+        </div>
+      </section>
+      <div class="slds-backdrop slds-backdrop_open"></div>
+    </template>
+    <!-- End Subscribe Modal -->
+    
+    <!-- Data Failed to Load -->
+    <template if:true={error}>
+      <div class="slds-text-color_error">
+        An error occurred while loading the events list.
+      </div>
+    </template>
+  </div>
+  </lightning-card>
+</template>
